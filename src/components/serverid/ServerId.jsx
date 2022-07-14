@@ -1,11 +1,14 @@
 
 import React from "react";
 
+const idUnknown = "unknown";
+const idErrored = "Error retrieving Id"
+
 export class ServerId extends React.Component {
     constructor(props) {
         super(props);
             
-        this.state = {serverId: "unknown"};
+        this.state = {serverId: idUnknown};
     }
 
     componentDidMount() {
@@ -14,13 +17,16 @@ export class ServerId extends React.Component {
         .then(r => {
             this.setState({serverId: r["server-id"]});
         }).catch((err) => {
+            this.setState({serverId: idErrored});
             console.log(err);
-        })
+        });
     }
 
     render() {
-        console.log(this);
-        console.log(this.state);
-        return (<p>Server ID : {this.state.serverId}</p>)
+        return (
+            <div className="w3-container w3-indigo">
+                <h4>Server ID : {this.state.serverId}</h4>
+            </div>
+        )
     }
 }
