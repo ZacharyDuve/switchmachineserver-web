@@ -16,7 +16,7 @@ export class SwitchMachineCollection extends React.Component {
     componentDidMount() {
         const thisComponent = this;
         if(!this.socket) {
-            this.socket = new WebSocket("ws://" + location.host + "/api/switchmachine/event");
+            this.socket = new WebSocket("ws://" + window.location.host + "/api/switchmachine/event");
             this.socket.addEventListener('message', (event) => {
                 console.log("event received", event)
                 let smEvent = JSON.parse(event.data);
