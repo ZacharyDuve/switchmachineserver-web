@@ -68,7 +68,7 @@ export class SwitchMachine extends React.Component {
         }
         let body = [newState];
         console.log("toggleGPIO0 payload state", newState);
-        fetch("http://localhost:8080/api/switchmachine", {
+        fetch("/api/switchmachine", {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
@@ -88,7 +88,7 @@ export class SwitchMachine extends React.Component {
         }
         let body = [newState];
         console.log("toggleGPIO1 payload state", newState);
-        fetch("http://localhost:8080/api/switchmachine", {
+        fetch("/api/switchmachine", {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
@@ -104,7 +104,7 @@ export class SwitchMachine extends React.Component {
         newState.position = "position 0";
         let body = [newState];
 
-        fetch("http://localhost:8080/api/switchmachine", {
+        fetch("/api/switchmachine", {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
@@ -120,7 +120,7 @@ export class SwitchMachine extends React.Component {
         newState.position = "position 1";
         let body = [newState];
 
-        fetch("http://localhost:8080/api/switchmachine", {
+        fetch("/api/switchmachine", {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'

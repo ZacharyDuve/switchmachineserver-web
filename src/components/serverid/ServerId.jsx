@@ -12,7 +12,7 @@ export class ServerId extends React.Component {
     }
 
     componentDidMount() {
-        fetch("http://localhost:8080/api/serverid",{mode: 'cors', headers: {'Access-Control-Allow-Origin':'*'}})
+        fetch("/api/serverid",{mode: 'cors', headers: {'Access-Control-Allow-Origin':'*'}})
         .then(r => r.json())
         .then(r => {
             this.setState({serverId: r["server-id"]});
