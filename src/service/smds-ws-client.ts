@@ -44,7 +44,7 @@ export class SMDSWebsocketClientImpl {
     }
 
     handleWSOnMessage(e: Event) {
-        e.
+        
     }
 
 }
