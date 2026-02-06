@@ -1,4 +1,5 @@
 import { hostname } from "node:os";
+import SwitchMachineDrivers from "./switchmachinedrivers/page";
 
 
 class SwitchMachine {
@@ -18,14 +19,7 @@ export default function Home() {
         <p>Server IP: <span className="font-bold">{hostname()}</span></p>
         <p>Server ID: <span className="font-bold">UNKNOWN</span></p>
       </div>
-      <section id="switch_machines" className="bg-blue-100">
-        <p className="bg-gray-300">Switch Machines: <span className="font-bold">{switchMachines.length}</span></p>
-        {switchMachines.map((sm, index) => (
-          <div key={index}>
-            <p>Switch Machine ID: <span>{sm.id.toString()}</span></p>
-          </div>
-        ))}
-      </section>
+      <SwitchMachineDrivers/>
     </div>
   );
 }
