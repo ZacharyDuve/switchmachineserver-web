@@ -47,8 +47,7 @@ export default function SwitchMachineDrivers() {
     return (
         <section>
             <p>{connectionString}</p>
-            {switchMachineMap.entries().map((value) => {
-                const [id, state] = value;
+            {switchMachineMap.values().map((state, id) => {
                 return (
                     <div>
                         <p>ID: {id}</p>
