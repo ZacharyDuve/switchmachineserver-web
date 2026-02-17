@@ -5,19 +5,25 @@ import { useEffect, useState } from "react";
 const SMDS_HOST_PATH = "/sockets/device";
 
 export default function SwitchMachineDrivers() {
-    const url = `ws://${window.location.host}${SMDS_HOST_PATH}`;
+    
     const [connected, setConnected] = useState(false);
     const [switchMachines, setSwitchMachines] = useState<Array<SwitchMachine>>([]);
 
     useEffect(() => {
+        // URL needs to be calculated in "useEffect"
+        const url = `ws://${window.location.host}${SMDS_HOST_PATH}`;
+        console.log("url", url)
         const ws = new WebSocket(url);
+        // TODO: is there a way to have a timeout on these 
 
         ws.onopen = (_e: Event) => {
             setConnected(true);
+            console.log(`connection to ${url} opened`)
         }
 
         ws.onclose = (_e: Event) => {
             setConnected(false);
+            console.log(`connection to ${url} closed`)
         }
 
         ws.onerror = (e: Event) => {
@@ -26,20 +32,28 @@ export default function SwitchMachineDrivers() {
 
         ws.onmessage = (e: MessageEvent) => {
             let switchMachine = JSON.parse(e.data);
-            if (!isSwitchMachineMessage(switchMachine)) {
-                console.log("received event that is not of a switch machine");
-                return;
-            }
+
+            //TODO: Add some sort of message validation
 
             // At this point we know that this is a switch machine message lets apply the update.
-            let switchMachineMessage = switchMachine as SwitchMachineMessage
+            let switchMachineMessage = switchMachine as SwitchMachineMessage;
             
-            
-            if (switchMachines.find((sm: SwitchMachine, _: Number): boolean => {
-                return switchMachineMessage.id == sm.id;
-            })) {
-                
-            }
+            switchMachineMessage.updates.forEach((messageSM, messageIndex, _) => {
+                let matchingSM = switchMachines.find((curSM, curIndex, _) => {
+                    return curSM.id == messageSM.id;
+                })
+
+                if (!matchingSM) {
+                    // Never found a matching so it is new
+                    switchMachines.push(new SwitchMachine(messageSM.id, messageSM.currentState));
+                    
+                } else {
+                    // Updated existing
+                    matchingSM.currentState = messageSM.currentState;
+                    matchingSM.setState = messageSM.setState;
+                }
+            });
+            setSwitchMachines(switchMachines)
         }
 
         return () => {
@@ -52,11 +66,11 @@ export default function SwitchMachineDrivers() {
     return (
         <section>
             <p>{connectionString}</p>
-            {switchMachineMap.values().map((state, id) => {
+            {switchMachines.map((sm, _i, _) => {
                 return (
                     <div>
-                        <p>ID: {id}</p>
-                        <p>State: {state}</p>
+                        <p>ID: {sm.id.toString()}</p>
+                        <p>State: {sm.currentState}</p>
                     </div>
                 )
             })}
@@ -144,11 +158,11 @@ interface SwitchMachineMessage {
     updates: SwitchMachine[]
 }
 
-function isSwitchMachineMessage(a: any): boolean {
-    return a &&
-        a.id && typeof(a.id) == 'number' &&
-        a.currentState && Object.values(SwitchMachineState).includes(a.currentState) &&
-        a.setState && Object.values(SwitchMachineState).includes(a.setState);
-}
+// function isSwitchMachineMessage(a: any): boolean {
+//     return a &&
+//         a.id && typeof(a.id) == 'number' &&
+//         a.currentState && Object.values(SwitchMachineState).includes(a.currentState) &&
+//         a.setState && Object.values(SwitchMachineState).includes(a.setState);
+// }
 
 //function handleWSOnMessage(e: Event, smState: {switchMachines: SwitchMachine, updateSwitchMachines: Dispatch<SetStateAction<never[]>>}) 
